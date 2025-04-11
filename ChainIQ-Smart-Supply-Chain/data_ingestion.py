@@ -7,6 +7,7 @@ from models import SupplyChainDocument
 from app import db
 import vector_store
 import aws_utils
+import PyPDF2
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -97,7 +98,6 @@ def extract_text_from_file(file_path):
     elif file_extension == 'pdf':
         try:
             # Extract text from PDF using PyPDF2
-            import PyPDF2
             
             # Dictionary to store structured content
             pdf_content = {

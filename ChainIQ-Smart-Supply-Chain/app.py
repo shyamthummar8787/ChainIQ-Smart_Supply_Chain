@@ -1,8 +1,9 @@
 import os
 import logging
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+from sqlalchemy.ext.declarative import DeclarativeBase
+from extensions import db
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 import tempfile
 import json
 from datetime import datetime
