@@ -1,55 +1,13 @@
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if user has already seen welcome page
-  if (localStorage.getItem('hasSeenWelcome')) {
+document.addEventListener('DOMContentLoaded', function () {
+  // Check if the user has already seen the welcome page in this session
+  const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
+
+  if (hasSeenWelcome === 'true') {
+    // If the flag exists and is set to true, do not show the welcome page
     return;
   }
 
-  // Add scroll and mousemove event listeners for parallax effects
-  window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    document.querySelectorAll('.welcome-section').forEach((section, index) => {
-      const speed = index * 0.1;
-      section.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-  });
-
-  // Mouse parallax effect
-  document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX / window.innerWidth - 0.5;
-    const mouseY = e.clientY / window.innerHeight - 0.5;
-
-    document.querySelectorAll('.feature-card').forEach((card) => {
-      const rect = card.getBoundingClientRect();
-      const cardX = rect.left + rect.width / 2;
-      const cardY = rect.top + rect.height / 2;
-
-      const moveX = (mouseX * 20).toFixed(2);
-      const moveY = (mouseY * 20).toFixed(2);
-
-      card.style.transform = `translate(${moveX}px, ${moveY}px) translateY(-10px)`;
-    });
-  });
-
-  // Staggered animations for benefit items
-  const benefitItems = document.querySelectorAll('.benefit-item');
-  benefitItems.forEach((item, index) => {
-    item.style.opacity = '0';
-    item.style.transform = 'translateX(-20px)';
-    item.style.transition = 'all 0.5s ease';
-    item.style.transitionDelay = `${index * 0.2}s`;
-  });
-
-  const benefitsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateX(0)';
-      }
-    });
-  }, { threshold: 0.5 });
-
-  benefitItems.forEach(item => benefitsObserver.observe(item));
-
+  // HTML for the welcome page
   const welcomeHtml = `
     <div class="welcome-overlay">
       <div class="welcome-container">
@@ -70,33 +28,38 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   `;
 
+  // Insert the welcome page into the DOM
   document.body.insertAdjacentHTML('beforeend', welcomeHtml);
 
   // Animate sections on scroll
   const sections = document.querySelectorAll('.welcome-section');
   const observerOptions = {
-    threshold: 0.2
+    threshold: 0.2,
   };
 
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('section-visible');
       }
     });
   }, observerOptions);
 
-  sections.forEach(section => {
+  sections.forEach((section) => {
     observer.observe(section);
   });
 
   // Handle welcome page dismiss
-  document.querySelector('.welcome-button').addEventListener('click', function() {
+  document.querySelector('.welcome-button').addEventListener('click', function () {
     document.querySelector('.welcome-overlay').style.animation = 'fadeOut 0.5s ease-out forwards';
     setTimeout(() => {
       document.querySelector('.welcome-overlay').remove();
-      // Set localStorage flag when user clicks "Get Started"
-      localStorage.setItem('hasSeenWelcome', 'true');
+      // Set the sessionStorage flag to indicate the welcome page has been seen
+      sessionStorage.setItem('hasSeenWelcome', 'true');
+
+      // Trigger the onboarding tour after the welcome page
+      const event = new Event('startOnboardingTour');
+      document.dispatchEvent(event);
     }, 500);
   });
 });

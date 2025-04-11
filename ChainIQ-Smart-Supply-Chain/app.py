@@ -1,24 +1,21 @@
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
+from db_config import db  # Import db from db_config
 import os
 import logging
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, session
-from sqlalchemy.ext.declarative import DeclarativeBase
-from extensions import db
-from flask_sqlalchemy import SQLAlchemy
-import tempfile
-import json
 from datetime import datetime
+import json
+import tempfile
+import spacy  # For spaCy
+from transformers import pipeline  # For Hugging Face Transformers
+import nlp_processor  # Import your NLP processor
 
 logging.basicConfig(level=logging.DEBUG)
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
-# create the app
+# Create the app
 app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET")
+app.secret_key = os.environ.get("SESSION_SECRET", "your-secret-key")
 
-# configure the database, use SQLite for local development
+# Configure the database
 db_path = os.environ.get("DATABASE_URL", "sqlite:///chainiq.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = db_path
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
@@ -30,28 +27,50 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Maximum upload size (5MB)
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
-# initialize the app with the extension
+# Initialize the app with the extension
 db.init_app(app)
 
 # Import routes and models after app initialization to avoid circular imports
 with app.app_context():
-    # Import models
     from models import SupplyChainDocument, ChatSession, ChatMessage
-    import vector_store
-    import nlp_processor
     from data_ingestion import process_document, allowed_file, extract_text_from_file, detect_document_type
-    
+    import vector_store
+
     # Create all DB tables
     db.create_all()
-    
+
     # Initialize vector store
     vector_store.init_vector_store()
 
 # Routes
 @app.route('/')
 def index():
-    return render_template('index.html')
+    """Display the welcome page, tour guide, or main app."""
+    # Clear session if app is restarted (add this line)
+    if not request.cookies.get('session'):
+        session.clear()
     
+    # Check if this is first time visit
+    if 'has_visited' not in session:
+        # First-time visit: Show the welcome page
+        session['has_visited'] = True
+        session['show_tour'] = True  # Enable tour guide for after welcome
+        session.modified = True
+        return redirect(url_for('welcome'))
+    
+    # Check if we should show tour guide
+    if session.get('show_tour'):
+        # Disable the tour guide flag for future visits
+        session['show_tour'] = False
+        session.modified = True
+        return redirect(url_for('tour_guide'))
+    
+    # Show the main app page
+    return render_template('index.html')
+
+
+
+
 @app.route('/visualization')
 def visualization():
     """Display the data visualization page"""
@@ -589,7 +608,7 @@ def chat():
     
     # Process the message using NLP
     try:
-        response = nlp_processor.process_query(user_message)
+        response = nlp_processor.process_query(user_message)  # Use the process_query function
         
         # Save bot response
         bot_chat_message = ChatMessage(
@@ -607,3 +626,6 @@ def chat():
     except Exception as e:
         app.logger.error(f"Error processing query: {str(e)}")
         return jsonify({'error': f'Error processing query: {str(e)}'}), 500
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001, debug=True)

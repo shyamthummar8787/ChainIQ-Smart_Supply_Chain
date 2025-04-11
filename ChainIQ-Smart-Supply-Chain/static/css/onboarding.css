@@ -1,4 +1,4 @@
-/**
+/* *
  * Onboarding Tour Styles
  * Chain IQ Smart Supply Chain Chatbot
  */
@@ -13,6 +13,7 @@
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 9999;
     display: none;
+    overflow: hidden; /* Prevent scrolling outside the overlay */
 }
 
 /* Welcome Modal */
@@ -56,6 +57,8 @@
 
 .tour-content {
     padding: 20px;
+    max-height: 60vh; /* Prevent content overflow */
+    overflow-y: auto; /* Add scroll for overflowing content */
 }
 
 .tour-feature {
@@ -91,10 +94,14 @@
     padding: 15px 20px;
     text-align: right;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between; /* Ensure buttons are spaced properly */
 }
 
 .tour-actions button {
     margin-left: 10px;
+    flex: 1; /* Ensure buttons are responsive */
+    max-width: 120px; /* Prevent buttons from being too wide */
 }
 
 /* Tooltip Styles */
@@ -107,6 +114,7 @@
     color: white;
     z-index: 10001;
     animation: tooltip-appear 0.3s ease-out;
+    overflow: hidden; /* Prevent tooltip content overflow */
 }
 
 @keyframes tooltip-appear {

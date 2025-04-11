@@ -2,7 +2,7 @@ import os
 import logging
 import json
 from models import VectorEmbedding, SupplyChainDocument
-from app import db
+from db_config import db  # Import db from db_config
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
