@@ -1,0 +1,230 @@
+/* *
+ * Onboarding Tour Styles
+ * Chain IQ Smart Supply Chain Chatbot
+ */
+
+/* Tour Overlay */
+.tour-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: none;
+    overflow: hidden; /* Prevent scrolling outside the overlay */
+}
+
+/* Welcome Modal */
+.tour-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background-color: #2a3743;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    overflow: hidden;
+    animation: modal-appear 0.4s ease-out;
+}
+
+@keyframes modal-appear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.tour-header {
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.tour-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.tour-content {
+    padding: 20px;
+    max-height: 60vh; /* Prevent content overflow */
+    overflow-y: auto; /* Add scroll for overflowing content */
+}
+
+.tour-feature {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.tour-feature i {
+    font-size: 24px;
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(52, 152, 219, 0.1);
+    border-radius: 50%;
+}
+
+.tour-feature h5 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+.tour-feature p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.tour-actions {
+    padding: 15px 20px;
+    text-align: right;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between; /* Ensure buttons are spaced properly */
+}
+
+.tour-actions button {
+    margin-left: 10px;
+    flex: 1; /* Ensure buttons are responsive */
+    max-width: 120px; /* Prevent buttons from being too wide */
+}
+
+/* Tooltip Styles */
+.tour-tooltip {
+    position: absolute;
+    max-width: 300px;
+    background-color: #2a3743;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    color: white;
+    z-index: 10001;
+    animation: tooltip-appear 0.3s ease-out;
+    overflow: hidden; /* Prevent tooltip content overflow */
+}
+
+@keyframes tooltip-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateX(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateX(-50%);
+    }
+}
+
+.tour-tooltip-bottom::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 10px 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent #2a3743 transparent;
+}
+
+.tour-tooltip-top::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+    border-color: #2a3743 transparent transparent transparent;
+}
+
+.tour-tooltip-left::before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #2a3743;
+}
+
+.tour-tooltip-right::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #2a3743 transparent transparent;
+}
+
+.tooltip-content {
+    padding: 15px;
+}
+
+.tooltip-content h5 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #3498db;
+}
+
+.tooltip-content p {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.tooltip-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.tooltip-counter {
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.tooltip-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+/* Highlight Element */
+.tour-highlight {
+    position: absolute;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    box-shadow: 0 0 0 5000px rgba(0, 0, 0, 0.7);
+    z-index: 10000;
+    pointer-events: none;
+    animation: highlight-pulse 2s infinite;
+}
+
+@keyframes highlight-pulse {
+    0% {
+        box-shadow: 0 0 0 5000px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(52, 152, 219, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 5000px rgba(0, 0, 0, 0.7), 0 0 0 6px rgba(52, 152, 219, 0.3);
+    }
+    100% {
+        box-shadow: 0 0 0 5000px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(52, 152, 219, 0.7);
+    }
+}
