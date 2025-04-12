@@ -1,0 +1,92 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/advanced-animations.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Upload Supply Chain Data</h3>
+                <span class="badge bg-primary">AI-Powered Document Recognition</span>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-2"></i> Upload supply chain documents to enhance the chatbot's knowledge base. Our AI will automatically analyze and recognize document type.
+                </div>
+                
+                <!-- Document Recognition Animation will be inserted here by JavaScript -->
+                
+                <form method="POST" enctype="multipart/form-data" id="upload-form">
+                    <div class="mb-4">
+                        <label for="file" class="form-label fw-bold">Select Document</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-file-upload"></i></span>
+                            <input class="form-control form-control-lg" type="file" id="file" name="file" required>
+                        </div>
+                        <div class="form-text">Max file size: 5MB. Supported formats: TXT, CSV, JSON, PNG, PDF</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="doc_type" class="form-label fw-bold">Document Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-file-alt"></i></span>
+                            <select class="form-select form-select-lg" id="doc_type" name="doc_type" required>
+                                <option value="general">General Document</option>
+                                <option value="invoice">Invoice</option>
+                                <option value="purchase_order">Purchase Order</option>
+                                <option value="shipping_document">Shipping Document</option>
+                                <option value="inventory">Inventory Report</option>
+                                <option value="supplier">Supplier Information</option>
+                                <option value="product">Product Catalog</option>
+                            </select>
+                        </div>
+                        <div class="form-text">Our AI will suggest the document type based on content analysis</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg" style="font-size: 1.2rem; padding: 0.75rem 1.5rem;">
+                            <i class="fas fa-cloud-upload-alt me-2"></i> Upload & Analyze Document
+                        </button>
+                        <small class="text-center mt-2 text-muted">The AI will analyze your document for key information</small>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-lightbulb me-2 text-warning"></i>AI Processing Features</h5>
+                        <ul class="small">
+                            <li><strong>Automatic Classification:</strong> Documents are analyzed and categorized</li>
+                            <li><strong>Entity Extraction:</strong> Key information like dates, amounts and IDs</li>
+                            <li><strong>Contextual Analysis:</strong> Understanding relationships between entities</li>
+                            <li><strong>Semantic Indexing:</strong> Content is stored for intelligent retrieval</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-file me-2 text-success"></i>Supported Document Types</h5>
+                        <div class="document-types d-flex flex-wrap gap-2 mt-2">
+                            <span class="badge bg-success"><i class="far fa-file-alt me-1"></i> TXT</span>
+                            <span class="badge bg-success"><i class="far fa-file-excel me-1"></i> CSV</span>
+                            <span class="badge bg-success"><i class="far fa-file-code me-1"></i> JSON</span>
+                            <span class="badge bg-success"><i class="far fa-file-image me-1"></i> PNG</span>
+                            <span class="badge bg-success"><i class="far fa-file-pdf me-1"></i> PDF</span>
+                        </div>
+                        <p class="small mt-2">
+                            <i class="fas fa-info-circle me-1"></i> Our AI can extract text and structure from all of these formats
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/document-recognition.js') }}"></script>
+<script src="{{ url_for('static', filename='js/advanced-document-recognition.js') }}"></script>
+{% endblock %}

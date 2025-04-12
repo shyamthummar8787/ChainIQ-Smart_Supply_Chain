@@ -1,0 +1,255 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/advanced-animations.css') }}">
+<style>
+    .doc-preview {
+        border-radius: 8px;
+        border: 1px solid rgba(var(--bs-dark-rgb), 0.1);
+        padding: 1.5rem;
+        background-color: rgba(var(--bs-dark-rgb), 0.03);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .doc-preview::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(var(--bs-primary-rgb), 0.05) 0%, rgba(var(--bs-dark-rgb), 0.02) 100%);
+        z-index: 0;
+    }
+    
+    .doc-preview-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .doc-meta-item {
+        display: flex;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border-radius: 8px;
+        background-color: rgba(var(--bs-dark-rgb), 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .doc-meta-item:hover {
+        background-color: rgba(var(--bs-primary-rgb), 0.05);
+        transform: translateY(-2px);
+    }
+    
+    .doc-meta-icon {
+        flex: 0 0 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--bs-primary);
+    }
+    
+    .doc-meta-content {
+        flex: 1;
+    }
+    
+    .meta-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+        color: var(--bs-secondary);
+    }
+    
+    .meta-value {
+        font-weight: bold;
+    }
+    
+    .doc-content-preview {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 1rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: 1px solid rgba(var(--bs-dark-rgb), 0.1);
+        background-color: rgba(var(--bs-dark-rgb), 0.05);
+        white-space: pre-wrap;
+    }
+    
+    .recognition-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(var(--bs-primary-rgb), 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(var(--bs-primary-rgb), 0);
+        }
+    }
+    
+    .doc-actions {
+        margin-top: 2rem;
+    }
+    
+    .proceed-btn {
+        transition: all 0.3s ease;
+    }
+    
+    .proceed-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(var(--bs-primary-rgb), 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">Document Analysis Complete</h3>
+                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Processed Successfully</span>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success" role="alert">
+                    <i class="fas fa-robot me-2"></i> The AI has analyzed your document. Review the information below and proceed to the chat interface to ask questions about it.
+                </div>
+                
+                <div class="doc-preview mb-4">
+                    <div class="recognition-badge badge bg-primary">
+                        <i class="fas fa-file-alt me-1"></i> {{ document.doc_type|capitalize }}
+                    </div>
+                    
+                    <div class="doc-preview-content">
+                        <h4 class="mb-4"><i class="fas fa-file-alt me-2 text-primary"></i> {{ document.filename }}</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="doc-meta-item">
+                                    <div class="doc-meta-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="doc-meta-content">
+                                        <div class="meta-label">Upload Date</div>
+                                        <div class="meta-value">{{ document.created_at.strftime('%B %d, %Y %H:%M') }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="doc-meta-item">
+                                    <div class="doc-meta-icon">
+                                        <i class="fas fa-fingerprint"></i>
+                                    </div>
+                                    <div class="doc-meta-content">
+                                        <div class="meta-label">Document ID</div>
+                                        <div class="meta-value">{{ document.id }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="doc-meta-item">
+                                    <div class="doc-meta-icon">
+                                        <i class="fas fa-sitemap"></i>
+                                    </div>
+                                    <div class="doc-meta-content">
+                                        <div class="meta-label">Document Type</div>
+                                        <div class="meta-value">{{ document.doc_type|capitalize }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {% if metadata %}
+                                    <h5 class="mb-3">Extracted Metadata</h5>
+                                    {% for key, value in metadata.items() %}
+                                        <div class="doc-meta-item">
+                                            <div class="doc-meta-icon">
+                                                {% if key == 'total_amount' or key == 'amount' %}
+                                                    <i class="fas fa-dollar-sign"></i>
+                                                {% elif key == 'date' or key == 'due_date' or key == 'invoice_date' or key == 'delivery_date' %}
+                                                    <i class="fas fa-calendar-day"></i>
+                                                {% elif key == 'invoice_number' or key == 'po_number' or key == 'tracking_number' %}
+                                                    <i class="fas fa-hashtag"></i>
+                                                {% elif key == 'supplier' or key == 'vendor' or key == 'customer' %}
+                                                    <i class="fas fa-building"></i>
+                                                {% else %}
+                                                    <i class="fas fa-tag"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div class="doc-meta-content">
+                                                <div class="meta-label">{{ key|replace('_', ' ')|capitalize }}</div>
+                                                <div class="meta-value">{{ value }}</div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i> No specific metadata was extracted for this document.
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if document.content %}
+                            <h5 class="mt-4 mb-3">Document Content Preview</h5>
+                            <div class="doc-content-preview">
+                                {{ document.content[:500] }}{% if document.content|length > 500 %}...{% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="doc-actions text-center">
+                    <a href="{{ url_for('index', from_upload=True, doc_type=document.doc_type, doc_id=document.id) }}" class="btn btn-primary btn-lg proceed-btn">
+                        <i class="fas fa-comments me-2"></i> Proceed to Chat Interface
+                    </a>
+                    <p class="text-muted mt-2">You can ask the AI assistant questions about this document</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>Processing Status:</strong> <span class="text-success">Complete</span>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('upload_file') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-upload me-1"></i> Upload Another Document
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add pulse animation to the proceed button
+    const proceedBtn = document.querySelector('.proceed-btn');
+    if (proceedBtn) {
+        proceedBtn.classList.add('pulse-animation');
+        
+        // Remove animation after 5 seconds
+        setTimeout(() => {
+            proceedBtn.classList.remove('pulse-animation');
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}
