@@ -72,14 +72,7 @@ flask db migrate -m "Initial migration"
 flask db upgrade
 ```
 
-7. **Run the application**:
-```bash
-# Development mode
-flask run --debug
 
-# Production mode (using Gunicorn)
-gunicorn -w 4 -b :5000 "app:create_app()"
-```
 
 ## Dependencies
 
@@ -105,15 +98,11 @@ gunicorn -w 4 -b :5000 "app:create_app()"
 - Chart.js 3.7.0
 - jQuery 3.6.0
 
-## Configuration
 
-### Essential Environment Variables
-```ini
-DATABASE_URL=postgresql://chainiq_user:password@localhost:5432/chainiq_db
-SECRET_KEY=your-secret-key-here
-DEBUG=False  # Set to True in development
-FLASK_ENV=development
-```
+
+
+
+
 
 ### Optional Configuration
 ```ini
@@ -144,26 +133,7 @@ ChainIQ-Smart_Supply_Chain/
 └── pyproject.toml        # Project dependencies
 ```
 
-## Dependencies
 
-### Core Dependencies
-- Flask
-- Flask-SQLAlchemy
-- PyPDF2
-- psycopg2-binary (PostgreSQL adapter)
-- Gunicorn (production server)
-
-### Development Dependencies
-- pytest
-- pytest-cov
-- black
-- flake8
-
-## Usage
-
-1. Start the application:
-```bash
-flask run
 ```
 
 2. Access the web interface at `http://localhost:5000`
