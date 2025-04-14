@@ -1,6 +1,6 @@
 # ChainIQ Smart Supply Chain
 
-![Project Logo](ChainIQ-Smart-Supply-Chain/static/images/logo.png)
+![Project Logo](ChainIQ-Smart_Supply_Chain/static/images/logo.png)
 
 A smart supply chain management system (formerly known as "repl-nix-workspace" v0.1.0) with document processing and data visualization capabilities.
 
