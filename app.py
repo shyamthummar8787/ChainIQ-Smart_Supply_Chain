@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 import json
 import tempfile
-import spacy  # For spaCy
+
 from transformers import pipeline  # For Hugging Face Transformers
 import nlp_processor  # Import your NLP processor
 
